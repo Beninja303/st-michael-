@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>St. Michael: Angelic Strike</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { background: linear-gradient(#87CEEB, #ffffff); display: block; }
+  </style>
+</head>
+<body>
+<audio id="bossMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2023/05/13/audio_51233c278d.mp3?filename=epic-heroic-cinematic-trailer-146507.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="game"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let frame = 0;
+let swordUnlocked = false;
+let demonsDodged = 0;
+let demonsSlain = 0;
+let bossFight = false;
+let bossIndex = 0;
+
+const bosses = [
+  { name: "Abyssion", color: "red", health: 5 },
+  { name: "Vortigar", color: "orange", health: 10 },
+  { name: "Zarnox", color: "yellow", health: 15 },
+  { name: "Necrith", color: "green", health: 20 },
+  { name: "Oblivion", color: "blue", health: 25 },
+  { name: "Xeraphon", color: "indigo", health: 30 },
+  { name: "Dreadion", color: "violet", health: 40 }
+];
+
+function drawGame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = "24px serif";
+  ctx.fillStyle = "gold";
+  ctx.fillText("St. Michael: Angelic Strike", 50, 50);
+
+  if (!swordUnlocked) {
+    ctx.fillStyle = "black";
+    ctx.fillText("Dodge 7 demons to find the Sword!", 50, 100);
+    if (demonsDodged >= 7) swordUnlocked = true;
+  } else if (!bossFight) {
+    ctx.fillStyle = "black";
+    ctx.fillText(`Demons slain: ${demonsSlain} / 50`, 50, 100);
+    if (demonsSlain >= 50) bossFight = true;
+  } else if (bossIndex < bosses.length) {
+    const boss = bosses[bossIndex];
+    ctx.fillStyle = boss.color;
+    ctx.fillText(`Boss Fight: ${boss.name}`, 50, 100);
+    ctx.fillText(`Health: ${boss.health}`, 50, 130);
+    if (frame % 100 === 0) {
+      boss.health--;
+      if (boss.health <= 0) bossIndex++;
+    }
+  } else {
+    ctx.fillStyle = "purple";
+    ctx.font = "30px serif";
+    ctx.fillText("Victory! Heavenly party time! 🎉", 50, 200);
+  }
+
+  frame++;
+  requestAnimationFrame(drawGame);
+}
+drawGame();
+</script>
+
+</body>
+</html>
